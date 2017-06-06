@@ -1,14 +1,278 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html class="no-focus" lang="en">
+
 <head>
   <meta charset="utf-8">
-  <title>NaberlyInternPropertySearch</title>
+  <meta name="description" content="" />
+  <meta name="author" content="{{IDX_CompanyName}}">
+  <meta name="robots" content="index, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta property="og:title" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:website" content="glvar.azurewebsites.net" />
+  <meta property="og:image" content="" />
+  <meta property="og:url" content="https://glvar.azurewebsites.net/propertysearch/?status=Active&page=1&city=Las%20Vegas&latlong=36.1699412,-115.13982959999998&Zoom=10&PriceMin=listprice%20ge%2011000000&PriceMax=listprice%20le%2020000000" />
+  <link rel="canonical" href="https://glvar.azurewebsites.net/propertysearch/?status=Active&page=1&city=Las%20Vegas&latlong=36.1699412,-115.13982959999998&Zoom=10&PriceMin=listprice%20ge%2011000000&PriceMax=listprice%20le%2020000000" />
   <base href="/">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="assets/img/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="assets/img/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="assets/img/favicons/manifest.json">
+  <link rel="mask-icon" href="assets/img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+  <!-- END Icons -->
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+  <!-- Web fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,700">
+
+  <!-- Bootstrap and Naberly -->
+  <link rel="stylesheet" id="css-bootstrap" href="assets/css/bootstrap.min.css">
+  <!-- build:remove -->
+  <link rel="stylesheet" id="css-main" href="assets/css/naberly-idx.css">
+  <!-- /build -->
+
+  <!-- END Stylesheets -->
+  <style>
+    @keyframes blink {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @-webkit-keyframes blink {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @-moz-keyframes blink {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .question-text {
+      color: white;
+    }
+
+    .count-text {
+      text-align: center;
+      size: 18pt;
+      color: black;
+      margin-bottom: 30px;
+    }
+
+    .disp-chunk {
+      text-align: center;
+    }
+
+    .no-results-text {
+      margin-bottom: 12px;
+    }
+
+    .btn-reset-search {
+      margin-bottom: 25px;
+    }
+
+    #value-info {
+      margin-bottom: 60px
+    }
+
+    #property-details {
+      margin-top: 25px;
+    }
+
+    .margin-top-40 {
+      margin-top: 40px;
+    }
+
+    .location {
+      display: inline-block;
+      width: calc(99.9% * 3/12 - 22.5px);
+      margin-right: 20px;
+      text-align: left;
+    }
+
+    .locationSearch {
+      width: 100%;
+    }
+
+    .feature {
+      width: calc(99.9% * 7/12 - 12.5px);
+      display: inline-block;
+      text-align: left;
+    }
+
+    .twitter-typeahead {
+      width: 100%;
+    }
+
+    @media screen and (min-width: 768px) {
+      .verticalCenter {
+        margin-top: 140px
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .searchBars {
+        padding-left: 5%;
+      }
+
+      .location {
+        width: calc(125% * 12/12 - 0px);
+        margin-bottom: 15px;
+      }
+
+      .feature {
+        width: calc(125% * 12/12 - 0px);
+      }
+    }
+
+    .featureHeader {
+      position: relative;
+    }
+
+    .specialFont {
+      position: absolute;
+      top: -15px;
+      left: -10px;
+      font-size: 16px;
+      color: #39ff14;
+    }
+  </style>
+
 </head>
-<body>
-  <app-root></app-root>
+
+<body data-ng-controller="AppCtrl" class="{{ appController.bodyClasses }}">
+  <!-- Page loader -->
+  <div id="page-loader"></div>
+
+  <!-- View loader (data-js-view-loader attribute is initialized in js/directives.js) -->
+  <div data-js-view-loader></div>
+
+  <!-- Page Container -->
+  <!-- You can update template settings or enable local storage feature in js/app.js -> 'AppCtrl' controller () -->
+  <div id="page-container" data-ng-class="{
+            'sidebar-l': oneui.settings.sidebarLeft,
+            'sidebar-r': ! oneui.settings.sidebarLeft,
+            'sidebar-o': oneui.settings.sidebarOpen,
+            'sidebar-o-xs': oneui.settings.sidebarOpenXs,
+            'sidebar-mini': oneui.settings.sidebarMini,
+            'side-overlay-o': oneui.settings.sideOverlayOpen,
+            'side-overlay-hover': oneui.settings.sideOverlayHover,
+            'side-scroll': oneui.settings.sideScroll,
+            'header-navbar-fixed': oneui.settings.headerFixed
+        }">
+
+    <!-- Header -->
+    <header data-ng-include="'assets/views/partials/base_header.html'" data-ng-controller="HeaderCtrl" id="header-navbar" class="main-nav"></header>
+
+    <!-- Main Container -->
+    <main id="main-container" data-autoscroll="true" data-ui-view></main>
+
+    <!-- Footer -->
+    <!--    <footer ng-if="ngMeta.title == 'Property Search'" data-ng-include="'assets/views/partials/search_footer.html'"
+            id="page-footer" class="bg-white"></footer>-->
+    <footer ng-if="ngMeta.title != 'Property Search'" data-ng-include="'assets/views/partials/base_footer.html'" id="page-footer" class="bg-white"></footer>
+
+    <!--<footer data-ng-include="'assets/views/partials/base_footer.html'" id="page-footer" class="bg-white"></footer>-->
+  </div>
+  <!-- END Page Container -->
+
+  <!-- JS Code -->
+  <!-- build:js assets/js/naberly-idx.min.js -->
+  <!-- OneUI Core JS: jQuery & Bootstrap Related -->
+  <script src="assets/js/core/jquery.min.js"></script>
+  <script src="assets/js/core/bootstrap.min.js"></script>
+  <script src="assets/js/core/jquery.slimscroll.min.js"></script>
+  <script src="assets/js/core/jquery.scrollLock.min.js"></script>
+  <!--<script src="assets/js/core/jquery.appear.min.js"></script>-->
+  <!--<script src="assets/js/core/jquery.countTo.min.js"></script>-->
+  <script src="assets/js/core/jquery.placeholder.min.js"></script>
+  <script src="assets/js/plugins/masked-inputs/jquery.maskedinput.min.js"></script>
+
+  <!-- OneUI Core JS: AngularJS Related -->
+  <script src="assets/js/core/angular.min.js"></script>
+  <script src="assets/js/core/angular-ui-router.min.js"></script>
+  <script src="assets/js/core/angular-ui-bootstrap-tpls.min.js"></script>
+  <script src="assets/js/core/angular-bootstrap-lightbox.js"></script>
+  <script src="assets/js/core/ocLazyLoad.min.js"></script>
+  <script src="assets/js/core/ngStorage.min.js"></script>
+  <script src="assets/js/core/config.js"></script>
+
+  <!-- OneUI Core JS: App Related -->
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/directives.js"></script>
+  <script src="assets/js/controllers.js"></script>
+  <script src="assets/js/dirPagination.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+  <script src="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+  <script src="assets/js/slick.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/ng-meta/0.3.9/ngMeta.min.js"></script>
+  <!-- /build -->
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0Oij9BP204CVtZB7tduhrKT_OdMBxCrk&libraries=drawing" type="text/javascript"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0-beta.2/angular-sanitize.js"></script>
+
+  <script src="assets/js/typeahead.bundle.js"></script>
+  <script src="assets/js/bloodhound.js"></script>
+  <script src="assets/js/angular-typeahead.js"></script>
+
+  <script src="assets/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+  <!--<script src='https://connect.facebook.net/en_US/all.js'></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.0/select2.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webshim/1.16.0/dev/polyfiller.js"></script>
+
+  <script src="assets/js/core/trix.js"></script>
+  <script src="assets/js/core/angular-trix.min.js"></script>
+  <script>
+    webshim.activeLang('en');
+    webshims.polyfill('forms');
+    webshims.cfg.no$Switch = true;
+  </script>
+
+  <script>
+    function init() {
+      window.addEventListener('scroll', function(e) {
+        var distanceY = window.pageYOffset || document.documentElement.scrollTop,
+          shrinkOn = 260,
+          body = document.querySelector("body");
+        if (distanceY > shrinkOn) {
+          body.classList.add("smaller");
+        } else {
+          if (body.classList.contains("smaller")) {
+            body.classList.remove("smaller");
+          }
+        }
+      });
+    }
+    window.onload = init();
+  </script>
+
 </body>
+
 </html>
